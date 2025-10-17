@@ -16,13 +16,10 @@ return new class extends Migration
 
             // Basic Info
             $table->string('name');
-            $table->string('address')->nullable();
-            $table->string('contact_number')->nullable();
-            $table->integer('age')->nullable();
-            $table->string('sex', 10)->nullable();
-
-            // Prescription (JSON)
-            $table->json('prescription')->nullable();
+            $table->string('address');
+            $table->string('contact_number');
+            $table->integer('age');
+            $table->string('sex', 10);
 
             // Product/Diagnosis Info
             $table->string('frame_type')->nullable();
@@ -40,6 +37,8 @@ return new class extends Migration
             $table->timestamp('follow_up_on')->nullable();
 
             // Archival & tracking
+            $table->integer('created_by')->default(1);
+            // $table->foreignId('created_by')->constrained('users')->nullOnDelete();
             $table->timestamp('archived_at')->nullable();
             $table->timestamps();
         });
