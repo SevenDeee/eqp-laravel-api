@@ -13,8 +13,12 @@ class PatientInformation extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'prescription' => 'array',
         'follow_up_on' => 'datetime',
         'archived_at' => 'datetime',
     ];
+
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class, 'patient_id');
+    }
 }

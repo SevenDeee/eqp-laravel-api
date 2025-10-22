@@ -20,27 +20,6 @@ class StorePatientInformationRequest extends FormRequest
             'age' => ['nullable', 'integer', 'min:0'],
             'sex' => ['nullable', 'string', 'in:Male,Female,Other'],
 
-            'prescription' => ['nullable', 'array'],
-            'prescription.far.od.sphere' => ['nullable', 'string'],
-            'prescription.far.od.cylinder' => ['nullable', 'string'],
-            'prescription.far.od.axis' => ['nullable', 'string'],
-            'prescription.far.od.monopd' => ['nullable', 'string'],
-
-            'prescription.far.os.sphere' => ['nullable', 'string'],
-            'prescription.far.os.cylinder' => ['nullable', 'string'],
-            'prescription.far.os.axis' => ['nullable', 'string'],
-            'prescription.far.os.monopd' => ['nullable', 'string'],
-
-            'prescription.near.od.sphere' => ['nullable', 'string'],
-            'prescription.near.od.cylinder' => ['nullable', 'string'],
-            'prescription.near.od.axis' => ['nullable', 'string'],
-            'prescription.near.od.monopd' => ['nullable', 'string'],
-
-            'prescription.near.os.sphere' => ['nullable', 'string'],
-            'prescription.near.os.cylinder' => ['nullable', 'string'],
-            'prescription.near.os.axis' => ['nullable', 'string'],
-            'prescription.near.os.monopd' => ['nullable', 'string'],
-
             'frame_type' => ['nullable', 'string'],
             'color' => ['nullable', 'string'],
             'lens_supply' => ['nullable', 'string'],

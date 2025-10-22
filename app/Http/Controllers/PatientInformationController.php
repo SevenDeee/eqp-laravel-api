@@ -4,26 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePatientInformationRequest;
 use App\Models\PatientInformation;
+use Illuminate\Http\Request;
 
 class PatientInformationController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = PatientInformation::whereNull('archived_at')->get();
+        $perPage = $request->get('per_page', 10);
+        $data = PatientInformation::whereNull('archived_at')->select('id', 'name', 'address', 'contact_number', 'age')->paginate($perPage);
+        // $data = PatientInformation::whereNull('archived_at')->select('id')->simplePaginate($perPage);
 
         return response()->json($data);
     }
 
-    public function show($patient)
+    public function show(PatientInformation $patient)
     {
-        $data = PatientInformation::where('id', $patient)
-            ->whereNull('archived_at')
-            ->firstOrFail();
+        $patient->load('prescriptions')->orderByDesc('created_at');
 
         return response()->json([
             'message' => 'Patient information retrieved successfully.',
-            'data' => $data,
+            'data' => $patient,
         ], 200);
     }
 

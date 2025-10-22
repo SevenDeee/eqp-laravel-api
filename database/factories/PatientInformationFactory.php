@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\PatientInformation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,58 +15,35 @@ class PatientInformationFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = PatientInformation::class;
+
     public function definition(): array
     {
+        $sex = $this->faker->randomElement(['Male', 'Female', 'Other']);
+        $amount = $this->faker->randomFloat(2, 1000, 10000);
+        $deposit = $this->faker->randomFloat(2, 500, $amount);
+        $balance = $amount - $deposit;
+
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->name($sex === 'Male' ? 'male' : 'female'),
             'address' => $this->faker->address(),
             'contact_number' => $this->faker->phoneNumber(),
-            'age' => $this->faker->numberBetween(1, 100),
-            'sex' => $this->faker->randomElement(['Male', 'Female', 'Other']),
+            'age' => $this->faker->numberBetween(5, 90),
+            'sex' => $sex,
 
-            // Prescription structure
-            'prescription' => [
-                'far' => [
-                    'od' => [
-                        'sphere' => $this->faker->randomElement(['-1.00', '-0.75', '-1.25', '0.00']),
-                        'cylinder' => $this->faker->randomElement(['-0.25', '-0.50', '-1.00']),
-                        'axis' => $this->faker->numberBetween(0, 180),
-                        'monopd' => $this->faker->numberBetween(28, 32),
-                    ],
-                    'os' => [
-                        'sphere' => $this->faker->randomElement(['-1.00', '-0.75', '-1.25', '0.00']),
-                        'cylinder' => $this->faker->randomElement(['-0.25', '-0.50', '-1.00']),
-                        'axis' => $this->faker->numberBetween(0, 180),
-                        'monopd' => $this->faker->numberBetween(28, 32),
-                    ],
-                ],
-                'near' => [
-                    'od' => [
-                        'sphere' => $this->faker->randomElement(['+1.00', '+1.25', '+1.50']),
-                        'cylinder' => $this->faker->randomElement(['0.00', '-0.25']),
-                        'axis' => $this->faker->numberBetween(0, 180),
-                        'monopd' => $this->faker->numberBetween(28, 32),
-                    ],
-                    'os' => [
-                        'sphere' => $this->faker->randomElement(['+1.00', '+1.25', '+1.50']),
-                        'cylinder' => $this->faker->randomElement(['0.00', '-0.25']),
-                        'axis' => $this->faker->numberBetween(0, 180),
-                        'monopd' => $this->faker->numberBetween(28, 32),
-                    ],
-                ],
-            ],
-
-            'frame_type' => $this->faker->randomElement(['Full Rim', 'Half Rim', 'Rimless']),
+            'frame_type' => $this->faker->randomElement(['Full Rim', 'Half Rim', 'Rimless', 'Clip-On', null]),
             'color' => $this->faker->safeColorName(),
-            'lens_supply' => $this->faker->randomElement(['Single Vision', 'Bifocal', 'Progressive']),
-            'diagnosis' => $this->faker->randomElement(['Myopia', 'Hyperopia', 'Astigmatism', 'Presbyopia']),
+            'lens_supply' => $this->faker->randomElement(['Single Vision', 'Bifocal', 'Progressive', 'Reading Glasses', null]),
+            'diagnosis' => $this->faker->sentence(),
 
-            'amount' => $this->faker->randomFloat(2, 1000, 5000),
-            'deposit' => $this->faker->randomFloat(2, 200, 1000),
-            'balance' => $this->faker->randomFloat(2, 0, 4000),
+            'amount' => $amount,
+            'deposit' => $deposit,
+            'balance' => $balance,
 
-            'special_instructions' => $this->faker->sentence(),
-            'follow_up_on' => $this->faker->dateTimeBetween('now', '+2 months'),
+            'special_instructions' => $this->faker->optional()->sentence(),
+            'follow_up_on' => $this->faker->optional()->dateTimeBetween('+1 week', '+3 months'),
+
+            'archived_at' => $this->faker->optional(0.2)->dateTimeBetween('-6 months', 'now'),
         ];
     }
 }
