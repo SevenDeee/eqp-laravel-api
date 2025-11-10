@@ -11,28 +11,34 @@ use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Patient::whereNull('archived_at')
-            ->select('id', 'name', 'address', 'contact_number', 'age', 'created_at')
-            ->withCount('prescriptions')
-            ->orderBy('created_at')
-            ->get();
+        $patients = Patient::whereNull('archived_at')
+            ->select('id', 'name', 'address', 'contact_number', 'age', 'follow_up_on', 'created_at')
+            ->when(
+                $request->search,
+                fn($q, $search) =>
+                $q->where(fn($q) => $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('contact_number', 'like', "%{$search}%"))
+            )
+            ->withCount('prescriptions')->latest()
+            ->simplePaginate($request->get('per_page', 15))
+            ->appends($request->query());
 
-        $years = Patient::select(DB::raw('YEAR(created_at) as year'))
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year');
-
-        return response()->json([$data, $years]);
+        return response()->json(['patients' => $patients]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function follow_up_list(Request $request)
+    {
+        $perPage = $request->get('per_page', 10);
+        $patient = Patient::whereDate('follow_up_on', '>=', now())
+            ->whereNull('archived_at')
+            ->orderBy('follow_up_on')
+            ->select('id', 'name', 'follow_up_on')
+            ->simplePaginate($perPage);
+        return response()->json($patient);
+    }
+
     public function show(Patient $patient)
     {
         $patient->load('prescriptions')->orderByDesc('created_at');
@@ -43,9 +49,6 @@ class PatientController extends Controller
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePatientRequest $request)
     {
         $patient = Patient::create($request->validated());
@@ -56,9 +59,6 @@ class PatientController extends Controller
         ], 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
         $patient->update($request->validated());
@@ -71,7 +71,6 @@ class PatientController extends Controller
 
     public function follow_up(Request $request, Patient $patient)
     {
-
         $validated = $request->validate([
             'follow_up_on' => 'nullable|date'
         ]);
@@ -85,9 +84,7 @@ class PatientController extends Controller
 
     public function archive(Patient $patient)
     {
-        $patient->update([
-            'archived_at' => now(),
-        ]);
+        $patient->update(['archived_at' => now()]);
 
         return response()->json([
             'message' => 'Patient archived successfully.',
@@ -107,9 +104,6 @@ class PatientController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Patient $patient)
     {
         //
