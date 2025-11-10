@@ -13,11 +13,17 @@ class Prescription extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'prescription' => 'array',
+        'far' => 'array',
+        'near' => 'array',
     ];
 
     public function patient()
     {
-        return $this->belongsTo(PatientInformation::class, 'patient_id');
+        return $this->belongsTo(Patient::class);
     }
+
+    // public function prescriber()
+    // {
+    //     return $this->belongsTo(User::class, 'prescribed_by');
+    // }
 }

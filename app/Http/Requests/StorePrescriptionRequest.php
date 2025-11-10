@@ -22,30 +22,36 @@ class StorePrescriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'patient_information_id' => ['required', 'exists:patient_information,id'],
-            'remarks' => ['nullable', 'string'],
+            'patient_id' => ['required', 'exists:patients,id'],
 
-            // Prescription JSON structure
-            'prescription' => ['nullable', 'array'],
-            'prescription.far.od.sphere' => ['nullable', 'string'],
-            'prescription.far.od.cylinder' => ['nullable', 'string'],
-            'prescription.far.od.axis' => ['nullable', 'string'],
-            'prescription.far.od.monopd' => ['nullable', 'string'],
+            'far' => ['nullable', 'array'],
+            'far.od' => ['nullable', 'array'],
+            'far.od.sphere' => ['nullable', 'numeric'],
+            'far.od.cylinder' => ['nullable', 'numeric'],
+            'far.od.axis' => ['nullable', 'integer', 'min:0', 'max:180'],
+            'far.od.monopd' => ['nullable', 'numeric', 'min:0'],
 
-            'prescription.far.os.sphere' => ['nullable', 'string'],
-            'prescription.far.os.cylinder' => ['nullable', 'string'],
-            'prescription.far.os.axis' => ['nullable', 'string'],
-            'prescription.far.os.monopd' => ['nullable', 'string'],
+            'far.os' => ['nullable', 'array'],
+            'far.os.sphere' => ['nullable', 'numeric'],
+            'far.os.cylinder' => ['nullable', 'numeric'],
+            'far.os.axis' => ['nullable', 'integer', 'min:0', 'max:180'],
+            'far.os.monopd' => ['nullable', 'numeric', 'min:0'],
 
-            'prescription.near.od.sphere' => ['nullable', 'string'],
-            'prescription.near.od.cylinder' => ['nullable', 'string'],
-            'prescription.near.od.axis' => ['nullable', 'string'],
-            'prescription.near.od.monopd' => ['nullable', 'string'],
+            'near' => ['nullable', 'array'],
+            'near.od' => ['nullable', 'array'],
+            'near.od.sphere' => ['nullable', 'numeric'],
+            'near.od.cylinder' => ['nullable', 'numeric'],
+            'near.od.axis' => ['nullable', 'integer', 'min:0', 'max:180'],
+            'near.od.monopd' => ['nullable', 'numeric', 'min:0'],
 
-            'prescription.near.os.sphere' => ['nullable', 'string'],
-            'prescription.near.os.cylinder' => ['nullable', 'string'],
-            'prescription.near.os.axis' => ['nullable', 'string'],
-            'prescription.near.os.monopd' => ['nullable', 'string'],
+            'near.os' => ['nullable', 'array'],
+            'near.os.sphere' => ['nullable', 'numeric'],
+            'near.os.cylinder' => ['nullable', 'numeric'],
+            'near.os.axis' => ['nullable', 'integer', 'min:0', 'max:180'],
+            'near.os.monopd' => ['nullable', 'numeric', 'min:0'],
+
+            'remarks' => ['nullable', 'string', 'max:255'],
+            'prescribed_by' => ['required', 'numeric'],
         ];
     }
 }

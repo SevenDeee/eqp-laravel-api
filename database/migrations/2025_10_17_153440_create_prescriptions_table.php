@@ -14,18 +14,14 @@ return new class extends Migration
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
 
-            // Link to PatientInformation
-            $table->foreignId('patient_id')
-                ->constrained('patient_information')
-                ->cascadeOnDelete();
+            $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
 
-            // JSON prescription data (far/near, OD/OS)
-            $table->json('prescription')->nullable();
+            $table->json('far')->nullable();
+            $table->json('near')->nullable();
 
-            // Optional notes or remarks
-            $table->text('remarks')->nullable();
-            $table->integer('prescribed_by')->default(1);
-            // $table->foreignId('prescribed_by')->constrained('users')->nullOnDelete();
+            $table->string('remarks')->nullable();
+            $table->foreignId('prescribed_by')->nullable()->constrained('users')->nullOnDelete();
+            // $table->integer('prescribed_by')->nullable();
 
             $table->timestamps();
         });

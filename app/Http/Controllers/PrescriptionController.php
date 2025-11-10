@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePrescriptionRequest;
-use App\Models\PatientInformation;
 use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,16 +10,17 @@ use Illuminate\Support\Facades\DB;
 class PrescriptionController extends Controller
 {
 
-    public function store(StorePrescriptionRequest $request, PatientInformation $patient)
+    public function store(StorePrescriptionRequest $request)
     {
+
+        $data = $request->validated();
+
+
         DB::beginTransaction();
 
         try {
-            $prescription = Prescription::create([
-                'patient_id' => $patient->id,
-                'prescription' => $request->prescription,
-                'remarks' => $request->remarks
-            ]);
+
+            $prescription = Prescription::create($data);
 
             DB::commit();
 
@@ -29,6 +29,7 @@ class PrescriptionController extends Controller
                 'data' => $prescription
             ], 201);
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             return response()->json([

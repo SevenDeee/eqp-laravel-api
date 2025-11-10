@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Patient;
 use App\Models\PatientInformation;
 use App\Models\Prescription;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,41 +22,66 @@ class PrescriptionFactory extends Factory
 
     public function definition(): array
     {
-        $prescription = [
-            'far' => [
-                'od' => [
-                    'sphere' => $this->faker->randomFloat(2, -5, 5),
-                    'cylinder' => $this->faker->randomFloat(2, -3, 3),
-                    'axis' => $this->faker->numberBetween(0, 180),
-                    'monopd' => $this->faker->numberBetween(55, 70),
-                ],
-                'os' => [
-                    'sphere' => $this->faker->randomFloat(2, -5, 5),
-                    'cylinder' => $this->faker->randomFloat(2, -3, 3),
-                    'axis' => $this->faker->numberBetween(0, 180),
-                    'monopd' => $this->faker->numberBetween(55, 70),
-                ],
-            ],
-            'near' => [
-                'od' => [
-                    'sphere' => $this->faker->randomFloat(2, -2, 2),
-                    'cylinder' => $this->faker->randomFloat(2, -1, 1),
-                    'axis' => $this->faker->numberBetween(0, 180),
-                    'monopd' => $this->faker->numberBetween(55, 70),
-                ],
-                'os' => [
-                    'sphere' => $this->faker->randomFloat(2, -2, 2),
-                    'cylinder' => $this->faker->randomFloat(2, -1, 1),
-                    'axis' => $this->faker->numberBetween(0, 180),
-                    'monopd' => $this->faker->numberBetween(55, 70),
-                ],
-            ],
-        ];
-
         return [
-            'patient_id' => PatientInformation::factory(),
-            'prescription' => $prescription,
+            'patient_id' => Patient::factory(),
+            'far' => $this->generateVisionData(),
+            'near' => $this->generateVisionData(),
             'remarks' => $this->faker->optional()->sentence(),
+            'prescribed_by' => User::factory(),
+            'created_at' => $this->faker->dateTimeBetween('-2 years', 'now'),
         ];
+    }
+
+    /**
+     * Generate realistic vision prescription data.
+     */
+    private function generateVisionData(): array
+    {
+        return [
+            'od' => [
+                'sphere' => $this->faker->randomFloat(2, -10, 5),
+                'cylinder' => $this->faker->optional()->randomFloat(2, -4, 0),
+                'axis' => $this->faker->optional()->numberBetween(1, 180),
+                'monopd' => $this->faker->randomFloat(1, 28, 35),
+            ],
+            'os' => [
+                'sphere' => $this->faker->randomFloat(2, -10, 5),
+                'cylinder' => $this->faker->optional()->randomFloat(2, -4, 0),
+                'axis' => $this->faker->optional()->numberBetween(1, 180),
+                'monopd' => $this->faker->randomFloat(1, 28, 35),
+            ],
+        ];
+    }
+
+    /**
+     * Indicate that the prescription is for distance vision only.
+     */
+    public function distanceOnly(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'far' => $this->generateVisionData(),
+            'near' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the prescription is for reading vision only.
+     */
+    public function readingOnly(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'far' => null,
+            'near' => $this->generateVisionData(),
+        ]);
+    }
+
+    /**
+     * Indicate that the prescription includes remarks.
+     */
+    public function withRemarks(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'remarks' => $this->faker->sentence(),
+        ]);
     }
 }
