@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
@@ -20,6 +21,11 @@ Route::controller(PatientController::class)->group(function () {
     Route::post('/patients/{patient}/follow-up', 'follow_up');
     Route::post('/patients/{patient}/archive', 'archive');
     Route::post('/patients/{patient}/restore', 'restore');
+});
+
+
+Route::controller(AppointmentController::class)->group(function () {
+    Route::post('/appointment', 'store');
 });
 
 /**
