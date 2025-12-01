@@ -27,7 +27,7 @@ class PrescriptionFactory extends Factory
             'far' => $this->generateVisionData(),
             'near' => $this->generateVisionData(),
             'remarks' => $this->faker->optional()->sentence(),
-            'prescribed_by' => User::factory(),
+            'prescribed_by' => null,
             'created_at' => $this->faker->dateTimeBetween('-2 years', 'now'),
         ];
     }

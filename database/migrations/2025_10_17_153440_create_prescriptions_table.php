@@ -20,8 +20,8 @@ return new class extends Migration
             $table->json('near')->nullable();
 
             $table->string('remarks')->nullable();
-            $table->foreignId('prescribed_by')->nullable()->constrained('users')->nullOnDelete();
-            // $table->integer('prescribed_by')->nullable();
+            // $table->foreignId('prescribed_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('prescribed_by')->nullable();
 
             $table->timestamps();
         });

@@ -39,7 +39,7 @@ class PatientFactory extends Factory
             'amount' => $amount,
             'deposit' => $deposit,
             'balance' => $balance,
-            'created_by' => User::factory(),
+            'created_by' => null,
             'archived_at' => $this->faker->optional(0.1)->dateTimeBetween('-1 year', 'now'),
             'created_at' => $this->faker->dateTimeBetween('-2 years', 'now'),
         ];

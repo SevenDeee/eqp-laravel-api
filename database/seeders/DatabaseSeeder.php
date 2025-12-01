@@ -16,21 +16,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create users (doctors/staff)
-        $users = User::factory(5)->create();
+        $users = rand(1, 2);
 
         // Create a default admin user
-        $admin = User::factory()->create([
-            'name' => 'Admin User',
-        ]);
+        // $admin = User::factory()->create([
+        //     'name' => 'Admin User',
+        // ]);
 
         // Create patients with prescriptions
         Patient::factory(30)
             ->active()
-            ->recycle($users) // Reuse created users
+            // ->recycle($users) // Reuse created users
             ->has(
                 Prescription::factory()
                     ->count(rand(1, 3))
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
 
@@ -38,11 +38,11 @@ class DatabaseSeeder extends Seeder
         Patient::factory(10)
             ->active()
             ->withFollowUp()
-            ->recycle($users)
+            // ->recycle($users)
             ->has(
                 Prescription::factory()
                     ->count(rand(1, 2))
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
 
@@ -50,43 +50,43 @@ class DatabaseSeeder extends Seeder
         Patient::factory(15)
             ->active()
             ->fullyPaid()
-            ->recycle($users)
+            // ->recycle($users)
             ->has(
                 Prescription::factory()
                     ->count(rand(1, 2))
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
 
         // Create some archived patients
         Patient::factory(5)
             ->archived()
-            ->recycle($users)
+            // ->recycle($users)
             ->has(
                 Prescription::factory()
                     ->count(rand(1, 2))
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
 
         // Create some patients with specific prescription types
         Patient::factory(5)
             ->active()
-            ->recycle($users)
+            // ->recycle($users)
             ->has(
                 Prescription::factory()
                     ->distanceOnly()
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
 
         Patient::factory(5)
             ->active()
-            ->recycle($users)
+            // ->recycle($users)
             ->has(
                 Prescription::factory()
                     ->readingOnly()
-                    ->recycle($users)
+                    // ->recycle($users)
             )
             ->create();
     }

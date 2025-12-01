@@ -32,8 +32,8 @@ return new class extends Migration
             $table->decimal('deposit', 10, 2)->nullable();
             $table->decimal('balance', 10, 2)->nullable();
 
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            // $table->integer('created_by')->nullable();
+            // $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('created_by')->nullable();
             $table->timestamp('archived_at')->nullable();
             $table->timestamps();
         });
